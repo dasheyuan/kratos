@@ -25,10 +25,10 @@ func NewMC() (mc *memcache.Memcache, cf func(), err error) {
 		cfg memcache.Config
 		ct paladin.TOML
 	)
-	if err = paladin.Get("memcache.toml").Unmarshal(&ct); err != nil {
+	if err = paladin.Get("config.txt").Unmarshal(&ct); err != nil {
 		return
 	}
-	if err = ct.Get("Client").UnmarshalTOML(&cfg); err != nil {
+	if err = ct.Get("Memcache").UnmarshalTOML(&cfg); err != nil {
 		return
 	}
 	mc =  memcache.New(&cfg)

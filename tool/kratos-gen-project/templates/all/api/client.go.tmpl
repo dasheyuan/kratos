@@ -3,6 +3,8 @@ import (
 	"context"
 	"fmt"
 
+    "github.com/go-kratos/kratos/pkg/naming/etcd"
+	"github.com/go-kratos/kratos/pkg/net/rpc/warden/resolver"
 	"github.com/go-kratos/kratos/pkg/net/rpc/warden"
 
 	"google.golang.org/grpc"
@@ -10,6 +12,10 @@ import (
 
 // AppID .
 const AppID = "TODO: ADD APP ID"
+
+func init() {
+	resolver.Register(etcd.Builder(nil))
+}
 
 // NewClient new grpc client
 func NewClient(cfg *warden.ClientConfig, opts ...grpc.DialOption) (DemoClient, error) {

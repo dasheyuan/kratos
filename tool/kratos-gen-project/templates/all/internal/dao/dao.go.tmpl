@@ -44,7 +44,7 @@ func newDao(r *redis.Redis, mc *memcache.Memcache, db *sql.DB) (d *dao, cf func(
 	var cfg struct{
 		DemoExpire xtime.Duration
 	}
-	if err = paladin.Get("application.toml").UnmarshalTOML(&cfg); err != nil {
+	if err = paladin.Get("config.txt").UnmarshalTOML(&cfg); err != nil {
 		return
 	}
 	d = &dao{

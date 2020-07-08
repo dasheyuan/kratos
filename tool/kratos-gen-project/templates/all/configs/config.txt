@@ -1,0 +1,50 @@
+[Application]
+    demoExpire = "24h"
+
+[Database]
+	addr = "58.87.101.13:3306"
+    dsn = "root:Bell.ai2020@tcp(58.87.101.13:3307)/bell_ykt?timeout=2s&readTimeout=10s&writeTimeout=10s&parseTime=true&loc=Local&charset=utf8mb4,utf8"
+	active = 20
+	idle = 10
+	idleTimeout ="4h"
+	queryTimeout = "2000ms"
+	execTimeout = "3000ms"
+	tranTimeout = "4000ms"
+
+[Grpc]
+    addr = "0.0.0.0:9000"
+    timeout = "10s"
+
+[Http]
+    addr = "0.0.0.0:8000"
+    timeout = "10s"
+
+[Memcache]
+	name = "demo"
+	proto = "tcp"
+	addr = "127.0.0.1:11211"
+	active = 50
+	idle = 10
+	dialTimeout = "100ms"
+	readTimeout = "200ms"
+	writeTimeout = "300ms"
+    idleTimeout = "80s"
+
+[Redis]
+	name = "demo"
+	proto = "tcp"
+	addr = "58.87.101.13:6380"
+	idle = 10
+	active = 10
+	dialTimeout = "1s"
+	readTimeout = "1s"
+	writeTimeout = "1s"
+	idleTimeout = "10s"
+
+[Cos]
+    SecretId  = "AKIDzgCTUkKY5MOM8eA6xYtypY2JM9h0Hdy4"
+    SecretKey = "4uUoshJgnlUxB9sMaZMvEH4cvylL9nBP"
+    Region    = "ap-beijing"
+    Bucket    = "bellcloud-1259391585"
+    AppId     = "1259391585"
+    Path      = "/app_store_test"

@@ -42,6 +42,15 @@ func create() (err error) {
 		if p.ModPrefix != "" && name == "go.mod.tmpl" {
 			continue
 		}
+
+		if name == "zoneinfo.tar.gz" {
+			targz, _ := box.Find(name)
+			if err = ioutil.WriteFile(filepath.Join(p.path, name), targz, 0644); err != nil {
+				break
+			}
+			continue
+		}
+
 		tmpl, _ := box.FindString(name)
 		i := strings.LastIndex(name, string(os.PathSeparator))
 		if i > 0 {

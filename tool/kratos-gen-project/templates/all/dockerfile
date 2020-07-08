@@ -1,0 +1,17 @@
+FROM alpine
+# 添加时区文件 P.S. ADD命令自动解压
+ADD zoneinfo.tar.gz /
+# 拷贝时区文件
+RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+RUN echo Asia/Shanghai > /etc/timezone
+# 设置工作目录
+WORKDIR /app
+# 添加可执行文件
+COPY cmd/cmd /app
+# 添加所需的配置文件
+COPY configs/ /configs/
+# 开放端口
+EXPOSE 8000 9000
+# 运行
+#CMD ["/cmd", "-conf", "/configs"]
+CMD ["./cmd"]

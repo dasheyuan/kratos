@@ -1,0 +1,2 @@
+url = "grpc://localhost:9000"
+appId = "app_service.dev"

@@ -13,10 +13,10 @@ func NewRedis() (r *redis.Redis, cf func(), err error) {
 		cfg redis.Config
 		ct paladin.Map
 	)
-	if err = paladin.Get("redis.toml").Unmarshal(&ct); err != nil {
+	if err = paladin.Get("config.txt").Unmarshal(&ct); err != nil {
 		return
 	}
-	if err = ct.Get("Client").UnmarshalTOML(&cfg); err != nil {
+	if err = ct.Get("Redis").UnmarshalTOML(&cfg); err != nil {
 		return
 	}
 	r = redis.NewRedis(&cfg)
