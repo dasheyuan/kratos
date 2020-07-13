@@ -1,5 +1,6 @@
 [Application]
     demoExpire = "24h"
+    reDoc = true
 
 [Database]
 	addr = "127.0.0.1:3306"
@@ -41,6 +42,3 @@
 	readTimeout = "1s"
 	writeTimeout = "1s"
 	idleTimeout = "10s"
-
-[ReDoc]
-    enable = true

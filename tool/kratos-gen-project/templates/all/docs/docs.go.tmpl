@@ -1,42 +1,51 @@
-package http
+package docs
 
 import (
 	"bytes"
+	"github.com/go-kratos/kratos/pkg/conf/paladin"
+	bm "github.com/go-kratos/kratos/pkg/net/http/blademaster"
+	"github.com/gobuffalo/packr/v2"
+	"html/template"
+	"net/http"
+)
 
-    "{{.ModPrefix}}{{.Name}}/docs"
-		"github.com/go-kratos/kratos/pkg/conf/paladin"
-    	bm "github.com/go-kratos/kratos/pkg/net/http/blademaster"
-    	"html/template"
-    	"net/http"
-    )
-
-type ReDocConfig struct {
-    Enable bool
+//go:generate packr2
+func Create() (docs []byte, err error) {
+	box := packr.New("api", "../api")
+	for _, name := range box.List() {
+		if name == "api.swagger.json" {
+			docs, _ = box.Find(name)
+		}
+	}
+	return
 }
 
-func initReDocRouter(e *bm.Engine) {
-    var (
-        cfg ReDocConfig
-        ct  paladin.TOML
-    )
-    if err := paladin.Get("config.txt").Unmarshal(&ct); err != nil {
-        return
-    }
-    if err := ct.Get("ReDoc").UnmarshalTOML(&cfg); err != nil {
-        return
-    }
+func RegisterReDocRouter(e *bm.Engine) {
+	var (
+		cfg struct{
+			ReDoc bool
+		}
+		ct  paladin.TOML
+	)
+	if err := paladin.Get("config.txt").Unmarshal(&ct); err != nil {
+		return
+	}
+	if err := ct.Get("Application").UnmarshalTOML(&cfg); err != nil {
+		return
+	}
 
-    if cfg.Enable{
-        g := e.Group("/help")
-        {
-            g.GET("/docs", reDoc)
-            g.GET("/api.swagger.json", loadSwaggerJSONFile)
-        }
-    }
+	if cfg.ReDoc {
+		g := e.Group("/help")
+		{
+			g.GET("/docs", reDoc)
+			g.GET("/api.swagger.json", loadSwaggerJSONFile)
+		}
+	}
 }
 
 func reDoc(ctx *bm.Context) {
 	var opts RedocOpts
+	opts.EnsureDefaults()
 	tmpl := template.Must(template.New("redoc").Parse(redocTemplate))
 
 	buf := bytes.NewBuffer(nil)
@@ -60,7 +69,21 @@ type RedocOpts struct {
 	Title string
 }
 
+// EnsureDefaults in case some options are missing
+func (r *RedocOpts) EnsureDefaults() {
+	if r.SpecURL == "" {
+		r.SpecURL = "./api.swagger.json"
+	}
+	if r.RedocURL == "" {
+		r.RedocURL = redocLatest
+	}
+	if r.Title == "" {
+		r.Title = "API documentation"
+	}
+}
+
 const (
+	redocLatest   = "https://cdn.jsdelivr.net/npm/redoc/bundles/redoc.standalone.js"
 	redocTemplate = `<!DOCTYPE html>
 <html>
   <head>
@@ -89,6 +112,6 @@ const (
 )
 
 func loadSwaggerJSONFile(ctx *bm.Context) {
-	h, _ := docs.Create()
+	h, _ := Create()
 	ctx.Bytes(http.StatusOK, "application/json; charset=utf-8", h)
 }
